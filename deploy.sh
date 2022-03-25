@@ -8,35 +8,39 @@ DAEMON_NAME_LIST=(TBot MailSender system_monitor)
 
 DL=$PROJECT_DIR/deploy.log
 
-echo `date` - Start deploy >> $DL
+function log {
+    echo `date` - $1 >> $DL
+}
 
 function deploy_project {
 if [[ $# == 2 ]]
 then
-    echo `date` - "Check update for" $1 >> $DL
+    log "Check update for $1"
     cd $PROJECT_DIR/$1
     IS_UPDATE=`git pull`
     if [[ $IS_UPDATE == "Already up to date." ]]
     then
-        echo `date` - Already up to date. >> $DL
+        log "Already up to date."
     else
-        echo `date` - Update found >> $DL
+        log "Update found"
         if [[ `ls requirements.txt` != "" ]]
         then
-            . ./.venv/bin/activate && echo `date` - activate venv >> $DL
-            ./.venv/bin/pip install -r requirements.txt && echo `date` - install requirements >> $DL
-            deactivate && echo `date` - deactivate venv >> $DL
+            . ./.venv/bin/activate && log "activate venv"
+            ./.venv/bin/pip install -r requirements.txt && log "install requirements"
+            deactivate && log "deactivate venv"
         fi
-        systemctl restart $2.service && echo `date` - restart $2.service >> $DL
-        echo `date` - $1 is updated >> $DL
+        systemctl restart $2.service && log "restart $2.service"
+        log "$1 is updated"
     fi
 fi
 }
+
+log "Start deploy"
 
 for ind in ${!PROJECT_NAME_LIST[*]}
 do
     deploy_project ${PROJECT_NAME_LIST[$ind]} ${DAEMON_NAME_LIST[$ind]}
 done
 
-echo `date` - Deploy is over >> $DL
+log "Deploy is over"
 echo >> $DL
