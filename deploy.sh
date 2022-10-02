@@ -18,13 +18,13 @@ function log {
 function deploy_project {
 if [[ $# == 2 ]]
 then
-    log "Check update for $1"
     cd $PROJECTS_DIR/$1
     IS_UPDATE=`git pull`
     if [[ $IS_UPDATE == "Already up to date." ]]
     then
-        log "Already up to date."
+        :
     else
+        log "Check update for $1"
         log "Update found"
         if [[ `ls requirements.txt` != "" ]]
         then
@@ -38,12 +38,9 @@ then
 fi
 }
 
-log "Start deploy"
-
 for ind in ${!PROJECT_NAME_LIST[*]}
 do
     deploy_project ${PROJECT_NAME_LIST[$ind]} ${DAEMON_NAME_LIST[$ind]}
 done
 
-log "Deploy is over"
 echo >> $DL
