@@ -42,5 +42,3 @@ for ind in ${!PROJECT_NAME_LIST[*]}
 do
     deploy_project ${PROJECT_NAME_LIST[$ind]} ${DAEMON_NAME_LIST[$ind]}
 done
-
-echo >> $DL
