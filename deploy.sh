@@ -34,6 +34,7 @@ then
         fi
         systemctl restart $2.service && log "restart $2.service"
         log "$1 is updated"
+        echo
     fi
 fi
 }
